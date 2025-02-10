@@ -29,7 +29,8 @@ class _ContentScreenState extends State<ContentScreen> {
       _chewieController = ChewieController(
         videoPlayerController: _videoPlayerController,
         autoPlay: true,
-        showControls: false,
+        showControls: true,
+
         looping: true,
       );
       setState(() {}); // Ensure UI updates after initialization
@@ -65,7 +66,7 @@ class _ContentScreenState extends State<ContentScreen> {
                   controller: _chewieController!,
                 ),
               )
-            : const Column(
+            : Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CircularProgressIndicator(),
