@@ -2,7 +2,6 @@ import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
-
 class ContentScreen extends StatefulWidget {
   final String? src;
 
@@ -15,7 +14,7 @@ class ContentScreen extends StatefulWidget {
 class _ContentScreenState extends State<ContentScreen> {
   late VideoPlayerController _videoPlayerController;
   ChewieController? _chewieController;
-  bool _liked = false;
+
   @override
   void initState() {
     super.initState();
@@ -28,17 +27,15 @@ class _ContentScreenState extends State<ContentScreen> {
     await _videoPlayerController.initialize().then((_) {
       _chewieController = ChewieController(
         videoPlayerController: _videoPlayerController,
-        autoPlay: true,
+        autoPlay: false,
         showControls: true,
-
         looping: true,
       );
       setState(() {}); // Ensure UI updates after initialization
     }).catchError((error) {
-      print("Error initializing video: $error"); // Debugging
+      print("Error initializing video: $error");
     });
   }
-
 
   @override
   void dispose() {
@@ -48,34 +45,32 @@ class _ContentScreenState extends State<ContentScreen> {
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        _chewieController != null &&
-                _chewieController!.videoPlayerController.value.isInitialized
-            ? GestureDetector(
-                onDoubleTap: () {
-                  setState(() {
-                    _liked = !_liked;
-                  });
-                },
-                child: Chewie(
-                  controller: _chewieController!,
-                ),
+    return Container(
+      width: double.infinity,
+      height: double.infinity, // Ensures full size of Swiper item
+      color: Colors.black, // Background color for loading state
+      child: Stack(
+        children: [
+          // Display video player if initialized
+          _chewieController != null &&
+              _chewieController!.videoPlayerController.value.isInitialized
+              ? Chewie(
+                controller: _chewieController!,
               )
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(),
-                  SizedBox(height: 10),
-                  Text('Loading...')
-                ],
-              ),
-
-      ],
+              : Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(height: 10),
+                Text('Loading...', style: TextStyle(color: Colors.white)),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
